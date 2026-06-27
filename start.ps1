@@ -1,6 +1,8 @@
 ﻿$ROOT = $PSScriptRoot
 $BIN  = Join-Path $ROOT "bin"
 $GOPHISH_DIR = Join-Path $BIN "gophish"
+$mailhogExe  = Join-Path $BIN "mailhog.exe"
+$gophishExe  = Join-Path $GOPHISH_DIR "gophish.exe"
 
 Write-Host ""
 Write-Host "  ===========================================" -ForegroundColor Cyan
@@ -8,50 +10,45 @@ Write-Host "   Phishing Simulation Awareness Lab"        -ForegroundColor Cyan
 Write-Host "  ===========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$mailhogExe = Join-Path $BIN "mailhog.exe"
-$gophishExe = Join-Path $GOPHISH_DIR "gophish.exe"
-
 if (-not (Test-Path $mailhogExe)) { Write-Host "[ERROR] mailhog.exe not found." -ForegroundColor Red; exit 1 }
 if (-not (Test-Path $gophishExe)) { Write-Host "[ERROR] gophish.exe not found." -ForegroundColor Red; exit 1 }
 
-$configSrc = Join-Path $ROOT "config\gophish-local.json"
-$configDst = Join-Path $GOPHISH_DIR "config.json"
-Copy-Item -Path $configSrc -Destination $configDst -Force
+# Copy local config
+Copy-Item -Path (Join-Path $ROOT "config\gophish-local.json") -Destination (Join-Path $GOPHISH_DIR "config.json") -Force
 
-# Kill any leftover processes
+# Kill any leftovers
 Get-Process mailhog  -ErrorAction SilentlyContinue | Stop-Process -Force
 Get-Process gophish  -ErrorAction SilentlyContinue | Stop-Process -Force
+Start-Sleep -Milliseconds 500
 
+# Start MailHog in its own detached window
 Write-Host "[1/2] Starting MailHog..." -ForegroundColor Green
-$mh = Start-Process -FilePath $mailhogExe -WorkingDirectory $BIN -PassThru -WindowStyle Minimized
-Write-Host "      PID: $($mh.Id)"
-
+Start-Process "cmd.exe" -ArgumentList "/c start `"MailHog`" `"$mailhogExe`"" -WorkingDirectory $BIN
 Start-Sleep -Seconds 2
 
+# Start Gophish in its own detached window
 Write-Host "[2/2] Starting Gophish..." -ForegroundColor Green
-$gp = Start-Process -FilePath $gophishExe -WorkingDirectory $GOPHISH_DIR -PassThru -WindowStyle Minimized -RedirectStandardError (Join-Path $GOPHISH_DIR "gophish.log")
-Write-Host "      PID: $($gp.Id)"
+Start-Process "cmd.exe" -ArgumentList "/c start `"Gophish`" `"$gophishExe`"" -WorkingDirectory $GOPHISH_DIR
+Start-Sleep -Seconds 4
 
-Start-Sleep -Seconds 3
-
-# Check still alive
-if ($mh.HasExited) { Write-Host "[WARN] MailHog sudah exit!" -ForegroundColor Red }
-else               { Write-Host "       MailHog: OK" -ForegroundColor Green }
-
-if ($gp.HasExited) { Write-Host "[WARN] Gophish sudah exit!" -ForegroundColor Red }
-else               { Write-Host "       Gophish: OK" -ForegroundColor Green }
-
-Write-Host ""
-Write-Host "  ===========================================" -ForegroundColor Cyan
-
-# Read password from log
-Start-Sleep -Seconds 1
-$logPath = Join-Path $GOPHISH_DIR "gophish.log"
-$passLine = Get-Content $logPath -ErrorAction SilentlyContinue | Select-String "Please login"
-if ($passLine) {
-    Write-Host "  PASSWORD: $passLine" -ForegroundColor Yellow
+# Verify ports
+$ports = netstat -ano 2>$null | Select-String "3333|8025"
+if ($ports) {
+    Write-Host "  Ports: LISTENING" -ForegroundColor Green
 } else {
-    Write-Host "  Lihat password di: $logPath" -ForegroundColor Yellow
+    Write-Host "  Ports belum listen, tunggu beberapa detik..." -ForegroundColor Yellow
+}
+
+# Read password
+$logPath = Join-Path $GOPHISH_DIR "gophish.log"
+Start-Sleep -Seconds 1
+$passLine = Get-Content $logPath -ErrorAction SilentlyContinue | Select-String "Please login"
+Write-Host ""
+if ($passLine) {
+    $pw = ($passLine -replace '.*password ', '')
+    Write-Host "  PASSWORD GOPHISH: $pw" -ForegroundColor Yellow
+} else {
+    Write-Host "  Lihat password di window Gophish yang baru terbuka" -ForegroundColor Yellow
 }
 
 Write-Host ""
@@ -59,11 +56,8 @@ Write-Host "   Gophish Admin  : https://localhost:3333" -ForegroundColor White
 Write-Host "   MailHog UI     : http://localhost:8025"  -ForegroundColor White
 Write-Host "   Phish Listener : http://localhost:8080"  -ForegroundColor White
 Write-Host ""
-
+Write-Host "  Opening browser..." -ForegroundColor Cyan
 Start-Process "https://localhost:3333"
-Start-Sleep -Milliseconds 500
+Start-Sleep -Milliseconds 800
 Start-Process "http://localhost:8025"
-
-Write-Host "  Browser dibuka! Tekan Enter untuk keluar dari launcher"
-Write-Host "  (service tetap berjalan di background)"
-Read-Host
+Write-Host "  Done! Jangan tutup window Gophish dan MailHog yang terbuka." -ForegroundColor Green
