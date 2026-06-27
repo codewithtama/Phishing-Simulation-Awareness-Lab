@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pengecekan Inventaris Aset IT — General Affairs Division</title>
+  <!--
+    PHISHING SIMULATION TEMPLATE — FOR AUTHORIZED USE ONLY
+    Template: ga-inventory-check.html
+    Theme   : GA/IT meminta karyawan memverifikasi aset yang mereka pegang via portal internal
+    Sender  : ga-assets@ptmajubersama.co.id  (spoofed)
+    Target  : Test apakah karyawan klik link verifikasi tanpa mengonfirmasi ke GA secara langsung
+  -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #eeeeee;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .email-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #2c5f2e 0%, #1e4020 100%);
+      padding: 22px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header .logo-text {
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .header .dept-badge {
+      background-color: #f4c430;
+      color: #1a3a1a;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Ribbon */
+    .ribbon {
+      background-color: #2c5f2e;
+      color: #f4c430;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      padding: 7px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    /* Body */
+    .body-content { padding: 30px 30px 20px; }
+
+    .greeting { font-size: 15px; margin-bottom: 16px; }
+    .body-content p {
+      line-height: 1.75;
+      margin-bottom: 14px;
+      color: #444444;
+    }
+
+    /* Asset Card */
+    .asset-card {
+      border: 1px solid #c8d8c8;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 22px 0;
+    }
+    .asset-card .card-header {
+      background-color: #2c5f2e;
+      color: #ffffff;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .asset-card table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .asset-card table tr:nth-child(even) { background-color: #f4f8f4; }
+    .asset-card table td {
+      padding: 9px 18px;
+      font-size: 13px;
+      border-bottom: 1px solid #e0e8e0;
+    }
+    .asset-card table td:first-child { color: #666666; width: 45%; }
+    .asset-card table td:last-child { font-weight: 600; color: #1a3a1a; }
+    .asset-card .card-footer {
+      background-color: #fff8e0;
+      padding: 10px 18px;
+      font-size: 12px;
+      color: #7a5a00;
+      border-top: 1px solid #e0e8e0;
+    }
+
+    /* Steps */
+    .steps {
+      background-color: #f9f9f9;
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin: 20px 0;
+    }
+    .steps p { font-weight: 700; color: #2c5f2e; margin-bottom: 10px; font-size: 13px; }
+    .steps ol { padding-left: 20px; }
+    .steps ol li {
+      font-size: 13px;
+      color: #444444;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+
+    /* CTA */
+    .cta-section { text-align: center; margin: 26px 0; }
+    .cta-button {
+      display: inline-block;
+      background-color: #2c5f2e;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 13px 38px;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 600;
+    }
+    .deadline-note {
+      text-align: center;
+      font-size: 12px;
+      color: #c07000;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    hr.divider { border: none; border-top: 1px solid #e8e8e8; margin: 24px 0; }
+
+    .signature { font-size: 13px; color: #555555; line-height: 1.8; }
+    .signature strong { color: #222222; font-size: 14px; }
+    .signature .title { color: #2c5f2e; font-weight: 600; }
+
+    .footer {
+      background-color: #f7f7f7;
+      border-top: 1px solid #e0e0e0;
+      padding: 16px 30px;
+      font-size: 11px;
+      color: #999999;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .footer a { color: #2c5f2e; text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="email-wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="logo-text">PT Maju Bersama</span>
+    <span class="dept-badge">General Affairs</span>
+  </div>
+  <div class="ribbon">📋 Audit Inventaris Aset IT — Q3 2025</div>
+
+  <!-- Body -->
+  <div class="body-content">
+    <p class="greeting">Yth. <strong>{{.FirstName}} {{.LastName}}</strong>,</p>
+
+    <p>
+      Dalam rangka pelaksanaan <strong>Audit Inventaris Aset IT Triwulan III Tahun 2025</strong>,
+      Divisi General Affairs bekerja sama dengan Divisi IT memerlukan konfirmasi kondisi dan
+      keberadaan aset perusahaan yang saat ini ada di bawah tanggung jawab Anda.
+    </p>
+
+    <p>
+      Berdasarkan data sistem kami, aset berikut tercatat atas nama Anda:
+    </p>
+
+    <!-- Asset Card -->
+    <div class="asset-card">
+      <div class="card-header">🖥 Daftar Aset Tercatat</div>
+      <table>
+        <tr>
+          <td>Nama Karyawan</td>
+          <td>{{.FirstName}} {{.LastName}}</td>
+        </tr>
+        <tr>
+          <td>NIK / Employee ID</td>
+          <td>{{.RId}}</td>
+        </tr>
+        <tr>
+          <td>Departemen</td>
+          <td>{{.Position}}</td>
+        </tr>
+        <tr>
+          <td>Laptop / Notebook</td>
+          <td>1 Unit (Perlu Dikonfirmasi)</td>
+        </tr>
+        <tr>
+          <td>Mouse &amp; Keyboard</td>
+          <td>1 Set (Perlu Dikonfirmasi)</td>
+        </tr>
+        <tr>
+          <td>ID Card / Access Card</td>
+          <td>1 Buah (Perlu Dikonfirmasi)</td>
+        </tr>
+      </table>
+      <div class="card-footer">
+        ⚠ Aset yang tidak dikonfirmasi akan dianggap <strong>hilang/rusak</strong> dan dikenakan
+        prosedur penggantian sesuai SOP GA-IT/005/2023.
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <p>Langkah Konfirmasi:</p>
+      <ol>
+        <li>Klik tombol <strong>"Konfirmasi Aset Sekarang"</strong> di bawah ini.</li>
+        <li>Login menggunakan akun portal karyawan Anda.</li>
+        <li>Isi formulir kondisi aset (5 menit).</li>
+        <li>Unggah foto aset jika diperlukan.</li>
+        <li>Klik <strong>Submit</strong> — bukti konfirmasi akan dikirim ke email Anda.</li>
+      </ol>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <a href="{{.URL}}" class="cta-button">✅ Konfirmasi Aset Sekarang</a>
+      <p class="deadline-note">⏰ Batas waktu: 30 Juni 2025, Pukul 16:00 WIB</p>
+    </div>
+
+    <p style="font-size: 12px; color: #888888;">
+      Pertanyaan? Hubungi tim GA di Ext. 303 atau email
+      <a href="mailto:ga-assets@ptmajubersama.co.id" style="color:#2c5f2e;">ga-assets@ptmajubersama.co.id</a>
+    </p>
+
+    <hr class="divider"/>
+
+    <!-- Signature -->
+    <div class="signature">
+      Hormat kami,<br/><br/>
+      <strong>Budi Santoso, S.T.</strong><br/>
+      <span class="title">IT Asset Manager — General Affairs Division</span><br/>
+      Ext. 303 | ga-assets@ptmajubersama.co.id<br/>
+      PT Maju Bersama | Gedung Graha Maju Lt. 3, Jakarta Selatan
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Pesan ini dikirim secara otomatis oleh sistem Asset Management PT Maju Bersama.<br/>
+    Jika Anda merasa menerima email ini secara tidak sengaja, abaikan pesan ini atau hubungi
+    <a href="mailto:helpdesk@ptmajubersama.co.id">helpdesk@ptmajubersama.co.id</a>.<br/><br/>
+    &copy; 2025 PT Maju Bersama. Seluruh hak dilindungi undang-undang.
+  </div>
+
+</div>
+</body>
+</html>

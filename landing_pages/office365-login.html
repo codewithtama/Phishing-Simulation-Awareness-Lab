@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign in to your account — Microsoft 365</title>
+  <!--
+    PHISHING SIMULATION LANDING PAGE — FOR AUTHORIZED USE ONLY
+    File    : office365-login.html
+    Purpose : Pixel-faithful Microsoft 365 login clone
+    ZERO-HARM: Form submission is intercepted by JavaScript.
+               NO credentials are ever sent to any server.
+               User is immediately redirected to awareness-redirect.html.
+  -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, sans-serif;
+      background: #f2f2f2;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top bar */
+    .topbar {
+      background: #fff;
+      padding: 16px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ms-logo {
+      display: flex;
+      gap: 2px;
+      flex-wrap: wrap;
+      width: 20px;
+      height: 20px;
+    }
+    .ms-logo span {
+      width: 9px;
+      height: 9px;
+      display: block;
+    }
+    .ms-logo .sq1 { background: #f25022; }
+    .ms-logo .sq2 { background: #7fba00; }
+    .ms-logo .sq3 { background: #00a4ef; }
+    .ms-logo .sq4 { background: #ffb900; }
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1b1b1b;
+    }
+
+    /* Main layout */
+    .main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 60px 16px 40px;
+    }
+
+    /* Card */
+    .login-card {
+      background: #ffffff;
+      border-radius: 2px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      padding: 44px 44px 36px;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    /* Microsoft Logo in card */
+    .card-ms-logo {
+      display: flex;
+      gap: 3px;
+      flex-wrap: wrap;
+      width: 24px;
+      height: 24px;
+      margin-bottom: 24px;
+    }
+    .card-ms-logo span { width: 11px; height: 11px; display: block; }
+    .card-ms-logo .sq1 { background: #f25022; }
+    .card-ms-logo .sq2 { background: #7fba00; }
+    .card-ms-logo .sq3 { background: #00a4ef; }
+    .card-ms-logo .sq4 { background: #ffb900; }
+
+    .card-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: #1b1b1b;
+      margin-bottom: 28px;
+      line-height: 1.3;
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1b1b1b;
+      margin-bottom: 4px;
+    }
+    .form-group input {
+      width: 100%;
+      border: 1px solid #8a8886;
+      border-radius: 2px;
+      padding: 6px 8px;
+      font-size: 15px;
+      color: #1b1b1b;
+      outline: none;
+      font-family: inherit;
+      height: 36px;
+    }
+    .form-group input:focus {
+      border-color: #0067b8;
+      border-width: 2px;
+    }
+
+    .form-links {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .form-links a {
+      font-size: 13px;
+      color: #0067b8;
+      text-decoration: none;
+    }
+    .form-links a:hover { text-decoration: underline; }
+
+    .btn-signin {
+      width: 100%;
+      background-color: #0067b8;
+      color: #ffffff;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      height: 36px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.3px;
+    }
+    .btn-signin:hover { background-color: #005a9e; }
+
+    .divider-line {
+      border: none;
+      border-top: 1px solid #d2d0ce;
+      margin: 24px 0 20px;
+    }
+
+    .sign-in-options {
+      font-size: 13px;
+      color: #1b1b1b;
+      margin-bottom: 12px;
+    }
+    .sign-in-options a {
+      color: #0067b8;
+      text-decoration: none;
+      display: block;
+      margin-top: 8px;
+    }
+    .sign-in-options a:hover { text-decoration: underline; }
+
+    .new-account {
+      margin-top: 20px;
+      font-size: 13px;
+    }
+    .new-account a { color: #0067b8; text-decoration: none; }
+    .new-account a:hover { text-decoration: underline; }
+
+    /* Footer */
+    .page-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      padding: 16px 32px;
+      font-size: 11px;
+      color: #605e5c;
+    }
+    .page-footer a { color: #605e5c; text-decoration: none; }
+    .page-footer a:hover { text-decoration: underline; }
+
+    /* Privacy notice that hints it's a simulation (very subtle — for ethical compliance) */
+    .sim-notice {
+      display: none; /* Hidden — shown ONLY via browser dev tools inspection — compliant disclosure */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="ms-logo">
+      <span class="sq1"></span><span class="sq2"></span>
+      <span class="sq3"></span><span class="sq4"></span>
+    </div>
+    <span class="topbar-title">Microsoft</span>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+    <div class="login-card">
+
+      <div class="card-ms-logo">
+        <span class="sq1"></span><span class="sq2"></span>
+        <span class="sq3"></span><span class="sq4"></span>
+      </div>
+
+      <h1 class="card-title">Sign in</h1>
+
+      <!--
+        ZERO-HARM FORM:
+        - action="" points nowhere (no real endpoint)
+        - onsubmit="return handleSubmit(event)" intercepts submission
+        - JS below redirects to awareness page instead of posting data
+      -->
+      <form id="loginForm" action="" method="post" onsubmit="return handleSubmit(event)" autocomplete="off" novalidate>
+
+        <div class="form-group">
+          <label for="emailInput">Email, phone, or Skype</label>
+          <input
+            type="email"
+            id="emailInput"
+            name="email"
+            placeholder=""
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <input
+            type="password"
+            id="passwordInput"
+            name="password"
+            placeholder=""
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="form-links">
+          <a href="#" onclick="return false;">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn-signin" id="signinBtn">Sign in</button>
+
+      </form>
+
+      <hr class="divider-line"/>
+
+      <div class="sign-in-options">
+        Sign-in options
+        <a href="#" onclick="return false;">🔑 Sign in with a security key</a>
+      </div>
+
+      <div class="new-account">
+        <a href="#" onclick="return false;">Create one!</a>
+      </div>
+
+      <!-- Hidden ethical disclosure (accessible via page source inspection) -->
+      <div class="sim-notice" aria-hidden="true">
+        PHISHING SIMULATION - This page is part of an authorized security awareness exercise
+        conducted by the organization's IT Security team. No data is collected.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="page-footer">
+    <a href="#" onclick="return false;">Terms of use</a>
+    <a href="#" onclick="return false;">Privacy & cookies</a>
+  </div>
+
+  <script>
+    /**
+     * ZERO-HARM HANDLER
+     * ==================
+     * This function intercepts the form submit event.
+     * It does NOT read, log, or transmit the values entered.
+     * It immediately clears the form fields for user privacy
+     * and redirects to the security awareness education page.
+     *
+     * No credentials ever leave the browser.
+     */
+    function handleSubmit(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      // Clear fields immediately — do not retain any input
+      document.getElementById('emailInput').value = '';
+      document.getElementById('passwordInput').value = '';
+
+      // Redirect to awareness education page
+      // In a Gophish context, Gophish itself will have already recorded
+      // that the user "submitted data" (a click event) before this JS fires.
+      // The actual field values are never sent to Gophish or any server.
+      setTimeout(function() {
+        window.location.href = 'awareness-redirect.html';
+      }, 300);
+
+      return false;
+    }
+
+    // Also intercept any direct Enter key submission
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        var activeEl = document.activeElement;
+        if (activeEl && (activeEl.id === 'emailInput' || activeEl.id === 'passwordInput')) {
+          handleSubmit(e);
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

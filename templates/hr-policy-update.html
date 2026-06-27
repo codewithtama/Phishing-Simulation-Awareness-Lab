@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pembaruan Kebijakan Cuti Tahunan 2025 — HR Division</title>
+  <!--
+    PHISHING SIMULATION TEMPLATE — FOR AUTHORIZED USE ONLY
+    Template: hr-policy-update.html
+    Theme   : HR mengirim notifikasi pembaruan kebijakan cuti yang memerlukan tanda tangan digital
+    Sender  : hr-noreply@ptmajubersama.co.id  (spoofed — MailHog hanya menangkap, tidak mengirim sungguhan)
+    Target  : Internal employees — test apakah mereka klik link tanpa verifikasi
+  -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #f0f0f0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 14px;
+      color: #333333;
+    }
+
+    .email-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+    }
+
+    /* Header */
+    .header {
+      background-color: #1a3c6b;
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header .logo-text {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .header .dept-badge {
+      background-color: #e8a020;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Alert Banner */
+    .alert-banner {
+      background-color: #fff3cd;
+      border-left: 4px solid #e8a020;
+      padding: 12px 30px;
+      font-size: 13px;
+      color: #7a5a00;
+    }
+    .alert-banner strong { color: #c07000; }
+
+    /* Body */
+    .body-content {
+      padding: 30px 30px 20px;
+    }
+    .greeting {
+      font-size: 15px;
+      margin-bottom: 16px;
+      color: #222222;
+    }
+    .body-content p {
+      line-height: 1.7;
+      margin-bottom: 14px;
+      color: #444444;
+    }
+
+    /* Info Box */
+    .info-box {
+      background-color: #f7f9fc;
+      border: 1px solid #d0daea;
+      border-radius: 6px;
+      padding: 18px 20px;
+      margin: 20px 0;
+    }
+    .info-box table { width: 100%; border-collapse: collapse; }
+    .info-box table td {
+      padding: 6px 0;
+      font-size: 13px;
+    }
+    .info-box table td:first-child {
+      color: #666666;
+      width: 45%;
+    }
+    .info-box table td:last-child {
+      font-weight: 600;
+      color: #1a3c6b;
+    }
+
+    /* CTA Button */
+    .cta-section { text-align: center; margin: 28px 0; }
+    .cta-button {
+      display: inline-block;
+      background-color: #1a3c6b;
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 14px 40px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: background-color 0.2s;
+    }
+    .cta-button:hover { background-color: #0f2a50; }
+
+    .deadline-note {
+      text-align: center;
+      font-size: 12px;
+      color: #cc0000;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    /* Divider */
+    hr.divider {
+      border: none;
+      border-top: 1px solid #e8e8e8;
+      margin: 24px 0;
+    }
+
+    /* Signature */
+    .signature { font-size: 13px; color: #555555; line-height: 1.8; }
+    .signature strong { color: #222222; font-size: 14px; }
+    .signature .title { color: #1a3c6b; font-weight: 600; }
+
+    /* Footer */
+    .footer {
+      background-color: #f7f7f7;
+      border-top: 1px solid #e0e0e0;
+      padding: 16px 30px;
+      font-size: 11px;
+      color: #999999;
+      line-height: 1.6;
+      text-align: center;
+    }
+    .footer a { color: #1a3c6b; text-decoration: none; }
+  </style>
+</head>
+<body>
+<div class="email-wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <span class="logo-text">PT Maju Bersama</span>
+    <span class="dept-badge">Human Resources</span>
+  </div>
+
+  <!-- Alert Banner -->
+  <div class="alert-banner">
+    <strong>⚠ Tindakan Diperlukan:</strong> Kebijakan baru berlaku per 1 Agustus 2025. Konfirmasi wajib sebelum 15 Juli 2025.
+  </div>
+
+  <!-- Body -->
+  <div class="body-content">
+    <p class="greeting">Yth. <strong>{{.FirstName}} {{.LastName}}</strong>,</p>
+
+    <p>
+      Divisi Human Resources PT Maju Bersama dengan ini menyampaikan bahwa telah terjadi
+      <strong>pembaruan signifikan</strong> pada Kebijakan Cuti Tahunan Karyawan yang akan berlaku
+      efektif mulai <strong>1 Agustus 2025</strong>. Pembaruan ini mencakup perubahan pada
+      mekanisme pengajuan, batas maksimal carry-over, serta penambahan jenis cuti baru
+      sesuai Peraturan Pemerintah No. 35 Tahun 2021.
+    </p>
+
+    <p>
+      Seluruh karyawan diwajibkan untuk membaca dokumen kebijakan yang telah diperbarui
+      dan memberikan <strong>tanda tangan digital</strong> sebagai bukti telah menerima dan
+      memahami kebijakan tersebut.
+    </p>
+
+    <!-- Info Box -->
+    <div class="info-box">
+      <table>
+        <tr>
+          <td>Nomor Surat</td>
+          <td>HR/KB-CUTI/VI/2025/047</td>
+        </tr>
+        <tr>
+          <td>Tanggal Terbit</td>
+          <td>25 Juni 2025</td>
+        </tr>
+        <tr>
+          <td>Berlaku Efektif</td>
+          <td>1 Agustus 2025</td>
+        </tr>
+        <tr>
+          <td>Batas Konfirmasi</td>
+          <td style="color: #cc0000; font-weight: 700;">15 Juli 2025 (Pukul 17:00 WIB)</td>
+        </tr>
+        <tr>
+          <td>Karyawan ID</td>
+          <td>{{.RId}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <p>
+      Karyawan yang <strong>tidak melakukan konfirmasi</strong> sebelum batas waktu yang
+      ditentukan akan dianggap menyetujui kebijakan secara otomatis, dan tidak dapat
+      mengajukan keberatan di kemudian hari.
+    </p>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <a href="{{.URL}}" class="cta-button">Baca Dokumen &amp; Tandatangani Sekarang</a>
+      <p class="deadline-note">⏰ Batas waktu: 15 Juli 2025, 17:00 WIB</p>
+    </div>
+
+    <p style="font-size: 12px; color: #888888;">
+      Jika tombol di atas tidak berfungsi, salin dan tempel tautan berikut ke browser Anda:<br/>
+      <span style="color: #1a3c6b; word-break: break-all;">{{.URL}}</span>
+    </p>
+
+    <hr class="divider"/>
+
+    <!-- Signature -->
+    <div class="signature">
+      Hormat kami,<br/><br/>
+      <strong>Siti Rahayu, S.Psi., M.M.</strong><br/>
+      <span class="title">HR Manager — PT Maju Bersama</span><br/>
+      Ext. 201 | hr-noreply@ptmajubersama.co.id<br/>
+      Gedung Graha Maju Lt. 5, Jakarta Selatan
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    Email ini dikirim secara otomatis oleh sistem HRIS PT Maju Bersama. Mohon tidak membalas email ini.<br/>
+    Jika Anda menerima email ini secara tidak sengaja, harap hubungi
+    <a href="mailto:hr@ptmajubersama.co.id">hr@ptmajubersama.co.id</a>.<br/><br/>
+    &copy; 2025 PT Maju Bersama. Seluruh hak dilindungi undang-undang.
+  </div>
+
+</div>
+</body>
+</html>

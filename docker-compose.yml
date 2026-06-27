@@ -1,0 +1,68 @@
+version: "3.9"
+
+# ============================================================
+# Phishing Simulation Awareness Lab
+# Stack: Gophish (phishing engine) + MailHog (local SMTP/UI)
+# Usage: docker-compose up -d
+# ============================================================
+
+services:
+
+  # ----------------------------------------------------------
+  # MailHog — local SMTP server + web UI for catching emails
+  # Admin UI  → http://localhost:8025
+  # SMTP      → localhost:1025 (internal: mailhog:1025)
+  # ----------------------------------------------------------
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: phishlab_mailhog
+    restart: unless-stopped
+    ports:
+      - "${MAILHOG_UI_PORT:-8025}:8025"     # Web UI
+      - "${MAILHOG_SMTP_PORT:-1025}:1025"   # SMTP
+    networks:
+      - phishlab_net
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://localhost:8025"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ----------------------------------------------------------
+  # Gophish — phishing simulation engine
+  # Admin UI  → https://localhost:3333  (self-signed TLS)
+  # Phish     → http://localhost:8080   (landing page listener)
+  # Default credentials: admin / gophish (change on first login)
+  # ----------------------------------------------------------
+  gophish:
+    image: gophish/gophish:latest
+    container_name: phishlab_gophish
+    restart: unless-stopped
+    depends_on:
+      mailhog:
+        condition: service_healthy
+    ports:
+      - "${GOPHISH_ADMIN_PORT:-3333}:3333"  # Admin panel (HTTPS)
+      - "${GOPHISH_PHISH_PORT:-8080}:80"    # Phishing listener (HTTP)
+    volumes:
+      - ./config/gophish-config.json:/opt/gophish/config.json:ro
+      - gophish_db:/opt/gophish/
+    networks:
+      - phishlab_net
+    environment:
+      - GOPHISH_INITIAL_ADMIN_PASSWORD=${GOPHISH_ADMIN_PASSWORD:-PhishLab@2025!}
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--no-check-certificate", "--spider", "https://localhost:3333/login"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  gophish_db:
+    name: phishlab_gophish_data
+
+networks:
+  phishlab_net:
+    name: phishlab_network
+    driver: bridge

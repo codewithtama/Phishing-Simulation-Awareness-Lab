@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anda Berhasil Dideteksi — Security Awareness Training</title>
+  <meta name="description" content="Halaman edukasi keamanan siber — simulasi phishing resmi perusahaan"/>
+  <!--
+    AWARENESS REDIRECT PAGE
+    File    : awareness-redirect.html
+    Purpose : Educational landing page for employees who clicked a phishing simulation link.
+              Explains what happened, shows red flags they missed, and provides next steps.
+  -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --red:     #ef4444;
+      --red-bg:  #fef2f2;
+      --orange:  #f97316;
+      --yellow:  #eab308;
+      --green:   #22c55e;
+      --green-bg:#f0fdf4;
+      --blue:    #3b82f6;
+      --blue-bg: #eff6ff;
+      --dark:    #0f172a;
+      --dark2:   #1e293b;
+      --mid:     #334155;
+      --muted:   #64748b;
+      --border:  #e2e8f0;
+      --surface: #f8fafc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--dark);
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #1a0505 0%, #2d0808 40%, #1a0505 100%);
+      border-bottom: 1px solid rgba(239,68,68,0.3);
+      padding: 60px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center top, rgba(239,68,68,0.15) 0%, transparent 70%);
+    }
+
+    .warning-icon {
+      font-size: 72px;
+      display: block;
+      margin-bottom: 20px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(239,68,68,0.2);
+      border: 1px solid rgba(239,68,68,0.4);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fca5a5;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .hero h1 .highlight {
+      color: var(--red);
+      position: relative;
+    }
+
+    .hero .subtitle {
+      font-size: 16px;
+      color: #94a3b8;
+      max-width: 520px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+
+    .hero-stat-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .hero-stat {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 14px 24px;
+      text-align: center;
+      min-width: 120px;
+    }
+    .hero-stat .num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--red);
+      display: block;
+    }
+    .hero-stat .label {
+      font-size: 11px;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+
+    /* ===== CONTAINER ===== */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ===== SECTION ===== */
+    section { padding: 48px 0; }
+    section + section { border-top: 1px solid rgba(255,255,255,0.06); }
+
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fca5a5;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    /* ===== WHAT HAPPENED BOX ===== */
+    .happened-box {
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.25);
+      border-radius: 12px;
+      padding: 24px 28px;
+    }
+    .happened-box p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #cbd5e1;
+    }
+    .happened-box strong { color: #fca5a5; }
+
+    /* ===== RED FLAGS GRID ===== */
+    .flags-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .flag-card {
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .flag-card:hover {
+      border-color: rgba(239,68,68,0.4);
+      transform: translateY(-2px);
+    }
+    .flag-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: rgba(239,68,68,0.2);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--red);
+      margin-bottom: 12px;
+    }
+    .flag-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+    }
+    .flag-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ===== STEPS (What to do) ===== */
+    .steps-list { display: flex; flex-direction: column; gap: 14px; }
+    .step-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: var(--dark2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .step-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      color: #ffffff;
+    }
+    .step-content h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 4px;
+    }
+    .step-content p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ===== QUICK TIPS ===== */
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+    .tip-card {
+      background: var(--dark2);
+      border: 1px solid rgba(59,130,246,0.2);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+    }
+    .tip-icon { font-size: 28px; display: block; margin-bottom: 10px; }
+    .tip-card h3 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 6px;
+    }
+    .tip-card p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ===== REPORT CTA ===== */
+    .report-section {
+      background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(59,130,246,0.08));
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 16px;
+      padding: 36px 32px;
+      text-align: center;
+    }
+    .report-section .icon { font-size: 48px; margin-bottom: 16px; display: block; }
+    .report-section h2 { color: #f1f5f9; margin-bottom: 12px; }
+    .report-section p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 500px;
+      margin: 0 auto 24px;
+    }
+    .report-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(34,197,94,0.3);
+    }
+    .report-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(34,197,94,0.4);
+    }
+
+    /* ===== DISCLAIMER ===== */
+    .disclaimer {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 32px;
+    }
+    .disclaimer p {
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.7;
+      text-align: center;
+    }
+    .disclaimer strong { color: #64748b; }
+
+    /* ===== FOOTER ===== */
+    .page-footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 24px;
+      text-align: center;
+      font-size: 12px;
+      color: #475569;
+    }
+    .page-footer strong { color: #94a3b8; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      section { padding: 36px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ====== HERO ====== -->
+  <div class="hero">
+    <span class="warning-icon">🎣</span>
+    <div class="hero-tag">🛡 Security Awareness Simulation</div>
+    <h1>Anda Baru Saja Terkena<br/><span class="highlight">Simulasi Phishing</span></h1>
+    <p class="subtitle">
+      Tenang — ini adalah latihan yang resmi dan aman. Tidak ada data Anda yang dikumpulkan.
+      Halaman ini ada untuk membantu Anda mengenali &amp; menghindari serangan phishing nyata.
+    </p>
+    <div class="hero-stat-row">
+      <div class="hero-stat">
+        <span class="num">94%</span>
+        <span class="label">Serangan siber<br/>dimulai dari email</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">3,4</span>
+        <span class="label">Miliar email<br/>phishing/hari</span>
+      </div>
+      <div class="hero-stat">
+        <span class="num">60%</span>
+        <span class="label">UKM tutup dalam 6 bulan<br/>pasca data breach</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- ====== WHAT HAPPENED ====== -->
+    <section id="what-happened">
+      <div class="section-tag">📋 Apa yang Terjadi?</div>
+      <h2>Ini Yang Sebenarnya Terjadi</h2>
+      <p class="section-desc">Simulasi ini dirancang untuk mengukur kesiapan keamanan siber seluruh karyawan.</p>
+
+      <div class="happened-box">
+        <p>
+          Anda menerima email yang tampak resmi dari <strong>tim internal perusahaan</strong>.
+          Email tersebut menciptakan rasa urgensi — deadline, peringatan akun, atau permintaan konfirmasi aset.
+          Ketika Anda mengklik tautan dan (atau hampir) memasukkan data di halaman login yang Anda lihat,
+          <strong>Anda berinteraksi dengan halaman phishing palsu</strong>.
+        </p>
+        <br/>
+        <p>
+          Namun ingat: <strong>ini adalah simulasi yang 100% aman dan resmi</strong>.
+          Tidak ada password, NIK, atau data pribadi Anda yang pernah terkirim ke manapun.
+          JavaScript di halaman tersebut secara eksplisit mencegah pengiriman form dan
+          mengarahkan Anda ke sini sebagai gantinya. Departemen IT Security Anda yang mengatur
+          latihan ini untuk <strong>melindungi, bukan menghukum</strong> Anda.
+        </p>
+      </div>
+    </section>
+
+    <!-- ====== RED FLAGS ====== -->
+    <section id="red-flags">
+      <div class="section-tag">🚩 Tanda Bahaya</div>
+      <h2>Red Flag yang Seharusnya Anda Perhatikan</h2>
+      <p class="section-desc">Semua email phishing — termasuk yang terbaik sekalipun — selalu meninggalkan jejak yang bisa dideteksi.</p>
+
+      <div class="flags-grid">
+        <div class="flag-card">
+          <div class="flag-num">1</div>
+          <h3>Urgensi Buatan</h3>
+          <p>Frasa seperti "dalam 24 jam", "segera", atau "akun Anda akan diblokir" sengaja dibuat untuk memaksa Anda bertindak tanpa berpikir.</p>
+        </div>
+        <div class="flag-card">
+          <div class="flag-num">2</div>
+          <h3>Domain Email Mencurigakan</h3>
+          <p>Perhatikan domain pengirim secara seksama. "hr-noreply@ptmajubersama-corp.co.id" berbeda dengan domain resmi perusahaan Anda.</p>
+        </div>
+        <div class="flag-card">
+          <div class="flag-num">3</div>
+          <h3>URL yang Tidak Cocok</h3>
+          <p>Hover (arahkan mouse tanpa klik) ke tautan. URL yang muncul di status bar harus cocok dengan domain resmi perusahaan.</p>
+        </div>
+        <div class="flag-card">
+          <div class="flag-num">4</div>
+          <h3>Permintaan Kredensial Tidak Biasa</h3>
+          <p>Departemen IT yang sah TIDAK PERNAH meminta password Anda melalui email atau halaman login di luar sistem resmi.</p>
+        </div>
+        <div class="flag-card">
+          <div class="flag-num">5</div>
+          <h3>Tata Bahasa atau Format Aneh</h3>
+          <p>Email phishing sering memiliki inkonsistensi kecil — font berbeda, spasi aneh, atau logo yang sedikit berbeda dari biasanya.</p>
+        </div>
+        <div class="flag-card">
+          <div class="flag-num">6</div>
+          <h3>Tidak Ada Personalisasi Spesifik</h3>
+          <p>Email resmi internal biasanya menyebut nama Anda, departemen, atau konteks spesifik. Email generik yang serba umum patut dicurigai.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== WHAT TO DO ====== -->
+    <section id="what-to-do">
+      <div class="section-tag">✅ Langkah Selanjutnya</div>
+      <h2>Apa yang Harus Dilakukan Jika Ini Terjadi di Dunia Nyata?</h2>
+      <p class="section-desc">Jika Anda menerima email mencurigakan — atau sudah terlanjur klik — ini langkah-langkah yang benar.</p>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>JANGAN Masukkan Data Apapun</h3>
+            <p>Jika Anda sudah di halaman login yang mencurigakan, tutup tab tersebut segera. Jangan isi field apapun.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Segera Hubungi IT Security / Helpdesk</h3>
+            <p>Laporkan email mencurigakan ke tim IT Security melalui Ext. 400 atau helpdesk@ptmajubersama.co.id. Jangan hapus email tersebut — tim IT membutuhkannya untuk investigasi.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>Ganti Password Segera (Jika Sudah Memasukkan)</h3>
+            <p>Jika Anda sudah terlanjur memasukkan password, segera ganti melalui portal resmi perusahaan dan beritahu IT Security. Lakukan ini untuk semua akun yang menggunakan password yang sama.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>Aktifkan Multi-Factor Authentication (MFA)</h3>
+            <p>MFA memberikan lapisan keamanan tambahan. Meski password Anda bocor, penyerang tetap tidak bisa login tanpa kode verifikasi kedua di perangkat Anda.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h3>Laporkan ke Rekan dan Atasan</h3>
+            <p>Phishing campaigns sering menarget banyak orang sekaligus. Beritahu kolega Anda agar mereka tidak terkena email yang sama.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== QUICK TIPS ====== -->
+    <section id="quick-tips">
+      <div class="section-tag">💡 Tips Cepat</div>
+      <h2>5 Kebiasaan Keamanan Siber yang Wajib Dimiliki</h2>
+      <p class="section-desc">Pencegahan selalu lebih mudah daripada pemulihan setelah insiden.</p>
+
+      <div class="tips-grid">
+        <div class="tip-card">
+          <span class="tip-icon">🔍</span>
+          <h3>Verifikasi Sebelum Klik</h3>
+          <p>Hover link, periksa domain, dan konfirmasi via saluran lain jika ragu.</p>
+        </div>
+        <div class="tip-card">
+          <span class="tip-icon">🔐</span>
+          <h3>Gunakan Password Manager</h3>
+          <p>Password unik dan kuat untuk setiap akun — jangan pernah reuse password.</p>
+        </div>
+        <div class="tip-card">
+          <span class="tip-icon">📱</span>
+          <h3>Aktifkan MFA di Semua Akun</h3>
+          <p>Authenticator app (bukan SMS) lebih aman untuk akun kritis.</p>
+        </div>
+        <div class="tip-card">
+          <span class="tip-icon">🔄</span>
+          <h3>Update Software Rutin</h3>
+          <p>Patch keamanan mencegah eksploitasi kerentanan yang sudah diketahui.</p>
+        </div>
+        <div class="tip-card">
+          <span class="tip-icon">📞</span>
+          <h3>Verifikasi Lewat Saluran Lain</h3>
+          <p>Jika email meminta tindakan penting, konfirmasi via telepon atau langsung ke pengirim.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== REPORT CTA ====== -->
+    <section id="report">
+      <div class="report-section">
+        <span class="icon">🛡</span>
+        <h2>Laporkan Email Phishing ke Tim IT Security</h2>
+        <p>
+          Apakah Anda menerima email phishing lain yang tidak termasuk dalam simulasi ini?
+          Jangan diam — laporkan segera. Laporan Anda membantu tim keamanan memblokir
+          ancaman nyata sebelum menyebar ke seluruh organisasi.
+        </p>
+        <a href="mailto:it-security@ptmajubersama.co.id?subject=Laporan%20Email%20Phishing&body=Halo%20Tim%20IT%20Security%2C%0A%0ASaya%20menemukan%20email%20mencurigakan%20dan%20ingin%20melaporkannya." class="report-btn">
+          📧 Laporkan ke IT Security Sekarang
+        </a>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        <p>
+          <strong>Catatan Resmi:</strong> Simulasi phishing ini dijalankan oleh Divisi IT Security
+          PT Maju Bersama sebagai bagian dari program Security Awareness Training yang disetujui manajemen.
+          Tidak ada kredensial, data pribadi, atau informasi sensitif yang dikumpulkan, disimpan,
+          atau ditransmisikan selama simulasi ini. Seluruh aktivitas dicatat hanya sebagai
+          statistik agregat (siapa yang membuka email, mengklik link) untuk keperluan laporan
+          keamanan internal — bukan untuk menghukum individu.
+          Pertanyaan? Hubungi <strong>it-security@ptmajubersama.co.id</strong>.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <strong>PT Maju Bersama — IT Security Division</strong><br/>
+    Security Awareness Training Program 2025 | Melindungi Karyawan &amp; Aset Perusahaan
+  </footer>
+
+</body>
+</html>
