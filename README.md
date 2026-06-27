@@ -41,6 +41,13 @@ Clone → `docker-compose up` → kampanye simulasi berjalan dalam 5 menit.
 - [Landing Pages](#landing-pages)
 - [Zero-Harm Design](#zero-harm)
 - [Cara Import ke Gophish](#cara-import-ke-gophish)
+- [📖 Tutorial Lengkap Setelah Login](#-tutorial-lengkap-setelah-login)
+  - [Step 1 — Sending Profile](#step-1--setup-sending-profile-smtp)
+  - [Step 2 — Landing Page](#step-2--import-landing-page)
+  - [Step 3 — Email Template](#step-3--import-email-template)
+  - [Step 4 — Users & Groups](#step-4--buat-target-group)
+  - [Step 5 — Launch Campaign](#step-5--buat--launch-campaign)
+  - [Step 6 — Monitor & Analisis](#step-6--monitor--analisis-hasil)
 - [Dokumentasi](#dokumentasi)
 - [Kontribusi](#kontribusi)
 
@@ -184,11 +191,16 @@ docker-compose ps
 | Phishing Listener | http://localhost:8080 | — |
 
 ```bash
-# Mendapatkan password Gophish awal dari log
+# Mendapatkan password Gophish awal dari log (mode Docker)
 docker logs phishlab_gophish 2>&1 | grep "Please login"
+
+# Mendapatkan password Gophish awal dari log (mode lokal / start.ps1)
+Get-Content .\bin\gophish\gophish.log | Select-String "Please login"
 ```
 
-> **Penting:** Ganti password default Gophish segera setelah login pertama via Account Settings.
+> **Penting:** Browser akan menampilkan warning "Your connection is not private" — ini normal karena Gophish menggunakan self-signed certificate. Klik **Advanced → Proceed to localhost** untuk melanjutkan.
+
+> **Ganti password** default Gophish segera setelah login pertama via Account Settings (ikon profil pojok kanan atas).
 
 ---
 
@@ -306,7 +318,8 @@ Gophish Dashboard → Sending Profiles → New Profile
 
 Name    : MailHog Local
 From    : HR Division <hr-noreply@ptmajubersama.co.id>
-Host    : mailhog:1025
+Host    : localhost:1025        ← mode lokal (start.ps1 / start.bat)
+          mailhog:1025          ← mode Docker (docker-compose)
 Username: (kosong)
 Password: (kosong)
 ```
@@ -318,7 +331,7 @@ Campaigns → Email Templates → New Template
 
 Name   : [Pilih nama template]
 Subject: Pembaruan Kebijakan Cuti Tahunan 2025 — Tindakan Diperlukan
-HTML   : [Paste isi file templates/*.html]
+HTML   : [Buka file templates/*.html → Ctrl+A → Ctrl+C → paste di tab HTML]
 ☑ Add Tracking Image
 ```
 
@@ -327,10 +340,10 @@ HTML   : [Paste isi file templates/*.html]
 ```
 Campaigns → Landing Pages → New Page
 
-Name         : Office 365 Login (Simulation)
-HTML         : [Paste isi file landing_pages/office365-login.html]
+Name             : Office 365 Login (Simulation)
+HTML             : [Buka file landing_pages/*.html → Ctrl+A → Ctrl+C → paste di tab HTML]
 ☐ Capture Submitted Data  ← JANGAN dicentang (zero-harm)
-Redirect URL : [URL awareness-redirect.html yang bisa diakses target]
+Redirect URL     : [URL awareness-redirect.html yang bisa diakses target]
 ```
 
 ### Step 4 — Import Target Group
@@ -355,6 +368,273 @@ URL          : http://localhost:8080
 Launch Date  : [Jadwal]
 Groups       : [Group dari Step 4]
 ```
+
+---
+
+## 📖 Tutorial Lengkap Setelah Login
+
+> Panduan ini dimulai setelah lo berhasil login ke Gophish Admin Dashboard di `https://localhost:3333`.
+> Ikuti **urutan step ini** karena setiap step bergantung pada step sebelumnya.
+
+### Peta Alur Kerja
+
+```
+[Login] → [Sending Profile] → [Landing Page] → [Email Template]
+                                                        ↓
+              [Monitor & Analisis] ← [Campaign] ← [User Group]
+```
+
+---
+
+### Step 0 — Jalankan Lab
+
+**Kalau pakai mode lokal (tanpa Docker):**
+
+Double-klik `start.bat` atau klik kanan `start.ps1` → **Run with PowerShell**.
+Dua window hitam akan muncul (Gophish & MailHog). **Jangan tutup** kedua window itu.
+
+**Kalau pakai Docker:**
+```bash
+docker-compose up -d
+```
+
+---
+
+### Step 1 — Login ke Gophish
+
+1. Buka browser → `https://localhost:3333`
+2. Kalau muncul warning **"Your connection is not private"** → klik **Advanced** → **Proceed to localhost** (ini normal, Gophish pakai self-signed cert)
+3. Login:
+   - **Username:** `admin`
+   - **Password:** lihat di window Gophish yang terbuka, baris bertulisan `Please login with the username admin and the password XXXXXXXXXXXXXXXX`
+4. Setelah masuk, **ganti password** di ikon profil pojok kanan atas → **Account Settings**
+
+---
+
+### Step 2 — Setup Sending Profile (SMTP)
+
+Sending Profile adalah konfigurasi "dari mana email dikirim". Untuk lab lokal ini, kita pakai **MailHog** sebagai SMTP server.
+
+**Navigasi:** `Sending Profiles` → `+ New Profile`
+
+| Field | Nilai | Keterangan |
+|-------|-------|------------|
+| **Name** | `MailHog Local` | Nama profil (bebas) |
+| **From** | `HR Division <hr-noreply@ptmajubersama.co.id>` | Nama + email pengirim |
+| **Host** | `localhost:1025` *(lokal)* atau `mailhog:1025` *(Docker)* | Host SMTP MailHog |
+| **Username** | *(kosong)* | MailHog tidak butuh auth |
+| **Password** | *(kosong)* | MailHog tidak butuh auth |
+
+> **Catatan Host:**
+> - Pakai `localhost:1025` jika menjalankan via `start.ps1` / `start.bat`
+> - Pakai `mailhog:1025` jika menjalankan via `docker-compose` (Docker network internal)
+
+**Verifikasi:**
+Klik tombol **Send Test Email** → masukkan email bebas (misal `test@test.com`) → klik Send → buka `http://localhost:8025` → email harus muncul di sana.
+
+✅ **Tanda berhasil:** Email muncul di inbox MailHog Web UI.
+
+---
+
+### Step 3 — Import Landing Page
+
+Landing page adalah halaman yang muncul saat target mengklik link phishing.
+
+**Navigasi:** `Landing Pages` → `+ New Page`
+
+#### Cara Import:
+
+1. Buka salah satu file dari folder `landing_pages/` di text editor (Notepad / VS Code)
+2. **Ctrl+A** → **Ctrl+C** (copy semua konten)
+3. Di Gophish: isi **Name**, klik tab **HTML** → **Ctrl+A** → hapus isi default → **Ctrl+V**
+
+#### Opsi A — Office 365 Login
+
+```
+Name : Office 365 Login (Simulation)
+File : landing_pages/office365-login.html
+```
+
+#### Opsi B — Company Portal
+
+```
+Name : Company Portal - PT Maju Bersama (Simulation)
+File : landing_pages/company-portal.html
+```
+
+**Pengaturan penting di bagian bawah form:**
+
+```
+☐ Capture Submitted Data    ← JANGAN dicentang (zero-harm design)
+☑ Redirect to:              ← Centang ini
+   URL: http://localhost:8080/awareness
+```
+
+> **Kenapa tidak capture data?** Landing page sudah menggunakan JavaScript untuk memblokir pengiriman form di sisi client. Ini adalah bagian dari Zero-Harm Design.
+
+✅ **Tanda berhasil:** Landing page muncul di daftar dengan nama yang benar.
+
+---
+
+### Step 4 — Import Email Template
+
+Email template adalah isi email phishing yang akan diterima target.
+
+**Navigasi:** `Email Templates` → `+ New Template`
+
+#### Cara Import:
+
+1. Buka salah satu file dari folder `templates/` di text editor
+2. **Ctrl+A** → **Ctrl+C** (copy semua konten)
+3. Di Gophish: klik tab **HTML** → **Ctrl+A** → **Ctrl+V**
+4. Isi **Name** dan **Subject** sesuai tabel di bawah
+5. Centang ☑ **Add Tracking Image**
+
+| File | Name | Subject |
+|------|------|---------|
+| `hr-policy-update.html` | `HR — Pembaruan Kebijakan Cuti 2025` | `[PENTING] Konfirmasi Kebijakan Cuti Tahunan 2025 — Tindakan Diperlukan` |
+| `ga-inventory-check.html` | `GA — Audit Inventaris Aset IT Q3` | `[URGENT] Konfirmasi Aset IT Anda — Batas Waktu Hari Ini` |
+| `it-password-reset.html` | `IT — Peringatan Password Akan Expired` | `⚠ Peringatan Keamanan: Password Anda Expired dalam 24 Jam` |
+
+> **Penting — Variabel Gophish:** Pastikan `{{.URL}}` ada di dalam HTML template (sudah ada di semua template). Ini adalah link yang akan diganti otomatis oleh Gophish dengan URL tracking unik per target.
+
+**Preview:** Klik tab **Preview** untuk melihat tampilan email sebelum disimpan.
+
+✅ **Tanda berhasil:** Template tersimpan dan terlihat di daftar Email Templates.
+
+---
+
+### Step 5 — Buat Target Group
+
+User Group adalah daftar karyawan/target yang akan menerima email simulasi.
+
+**Navigasi:** `Users & Groups` → `+ New Group`
+
+#### Cara 1 — Import via CSV (Direkomendasikan)
+
+Buat file CSV dengan format berikut, lalu klik **Bulk Import Users**:
+
+```csv
+First Name,Last Name,Email,Position
+Budi,Santoso,budi.santoso@company.co.id,Finance Staff
+Siti,Rahayu,siti.rahayu@company.co.id,HR Manager
+Agus,Prasetyo,agus.prasetyo@company.co.id,IT Support
+Dewi,Kurniawan,dewi.kurniawan@company.co.id,Marketing Staff
+```
+
+> **Kolom yang wajib ada:** `First Name`, `Last Name`, `Email` — kolom `Position` opsional tapi berguna untuk segmentasi laporan.
+
+#### Cara 2 — Input Manual
+
+Klik **+ Add** untuk menambahkan satu per satu:
+```
+First Name : Budi
+Last Name  : Santoso
+Email      : budi.santoso@company.co.id
+Position   : Finance Staff
+```
+
+Isi **Name Group**, contoh: `Finance & HR Department — Q3 2025`
+
+✅ **Tanda berhasil:** Group tersimpan dengan jumlah member yang sesuai.
+
+---
+
+### Step 6 — Buat & Launch Campaign
+
+Ini adalah langkah akhir — menggabungkan semua komponen menjadi satu kampanye aktif.
+
+**Navigasi:** `Campaigns` → `+ New Campaign`
+
+| Field | Nilai |
+|-------|-------|
+| **Name** | `Q3 2025 — HR Policy Phishing Simulation` |
+| **Email Template** | `HR — Pembaruan Kebijakan Cuti 2025` *(dari Step 4)* |
+| **Landing Page** | `Office 365 Login (Simulation)` *(dari Step 3)* |
+| **URL** | `http://localhost:8080` |
+| **Launch Date** | Isi tanggal & waktu, atau kosongkan untuk langsung launch |
+| **Sending Profile** | `MailHog Local` *(dari Step 2)* |
+| **Groups** | `Finance & HR Department — Q3 2025` *(dari Step 5)* |
+
+> **Field URL:** Gunakan `http://localhost:8080` untuk lab lokal. Jika target mengakses dari mesin lain di jaringan yang sama, ganti dengan IP host (contoh: `http://192.168.1.10:8080`).
+
+**Klik `Launch Campaign`** → konfirmasi → kampanye mulai berjalan.
+
+✅ **Tanda berhasil:** Status campaign berubah menjadi `In Progress` dan email mulai dikirim.
+
+---
+
+### Step 7 — Monitor & Analisis Hasil
+
+**Navigasi:** `Campaigns` → klik nama campaign → tab **Results**
+
+#### Dashboard Statistik Real-time
+
+```
+┌──────────────────────────────────────────────────────────┐
+│  📧 Emails Sent    : 4    → Total email terkirim         │
+│  📬 Emails Opened  : 3    → Buka email (tracking pixel)  │
+│  🖱  Clicked Link   : 2    → Klik link phishing           │
+│  📝 Submitted Data : 1    → Isi form login palsu          │
+│  📧 Email Reported : 0    → Laporkan ke IT (jika diset)  │
+└──────────────────────────────────────────────────────────┘
+```
+
+#### Interpretasi Metrik
+
+| Metrik | Rumus | Benchmark Industri | Makna |
+|--------|-------|--------------------|-------|
+| **Open Rate** | Opened / Sent × 100 | 30–60% | Seberapa menarik subject line |
+| **Click Rate** | Clicked / Sent × 100 | 15–30% | Efektivitas urgency dalam email |
+| **Submit Rate** | Submitted / Clicked × 100 | 30–50% | Kualitas landing page |
+| **Vulnerability Rate** | Submitted / Sent × 100 | < 5% ideal | Tingkat kerentanan organisasi |
+
+#### Timeline View
+
+Gophish mencatat timestamp setiap event. Perhatikan:
+- Jam berapa email paling sering dibuka
+- Jeda antara email dibuka dan link diklik
+- Pola departemen yang paling rentan
+
+#### Melihat Detail Per Target
+
+Klik **Details** di baris setiap target untuk melihat:
+- Semua event yang terjadi (Sent → Opened → Clicked → Submitted)
+- Timestamp masing-masing event
+- Status terakhir
+
+#### Export Hasil
+
+```
+Campaigns → [Nama Campaign] → Export Results (CSV)
+```
+
+File CSV bisa langsung digunakan di template laporan `docs/analysis-report.md`.
+
+---
+
+#### ⚡ Cek Email di MailHog
+
+Buka `http://localhost:8025` untuk melihat semua email yang dikirim Gophish:
+- Klik email untuk melihat preview HTML
+- Klik link di dalam email untuk mensimulasikan klik target
+- Pastikan link mengarah ke `http://localhost:8080/...` (bukan literal `{{.URL}}`)
+
+> **Tip:** Selalu test klik link dari MailHog sebelum campaign live untuk memastikan tracking berfungsi dan landing page tampil dengan benar.
+
+---
+
+### ❗ Troubleshooting per Step
+
+| Masalah | Kemungkinan Penyebab | Solusi |
+|---------|---------------------|--------|
+| Browser warning saat buka Gophish | Self-signed certificate | Klik **Advanced → Proceed to localhost** |
+| Test email gagal dikirim | Host SMTP salah | Mode lokal: `localhost:1025` / Docker: `mailhog:1025` |
+| Email tidak muncul di MailHog | Service MailHog mati | Restart: `docker-compose restart mailhog` atau jalankan ulang `start.ps1` |
+| Link di email tidak berfungsi | URL campaign salah | Pastikan URL diisi `http://localhost:8080` |
+| Landing page tidak muncul | Port 8080 tidak terbuka | Cek `docker-compose ps` dan port mapping |
+| `{{.URL}}` muncul sebagai teks | Template tidak punya variabel URL | Tambahkan `{{.URL}}` di href link/tombol |
+| Campaign status stuck "Sending" | MailHog tidak reachable | Restart: `docker-compose restart` atau jalankan ulang `start.ps1` |
 
 ---
 
