@@ -1,0 +1,1 @@
+goose: no migrations to run. current version: 20220321133237

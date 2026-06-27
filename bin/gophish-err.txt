@@ -1,0 +1,8 @@
+time="2026-06-27T10:32:56+07:00" level=warning msg="No contact address has been configured."
+time="2026-06-27T10:32:56+07:00" level=warning msg="Please consider adding a contact_address entry in your config.json"
+time="2026-06-27T10:32:56+07:00" level=info msg="Please login with the username admin and the password 4465ff79a60da140"
+time="2026-06-27T10:32:56+07:00" level=info msg="Starting admin server at https://0.0.0.0:3333"
+time="2026-06-27T10:32:56+07:00" level=info msg="Background Worker Started Successfully - Waiting for Campaigns"
+time="2026-06-27T10:32:56+07:00" level=info msg="Starting phishing server at http://0.0.0.0:8080"
+time="2026-06-27T10:32:56+07:00" level=info msg="Starting IMAP monitor manager"
+time="2026-06-27T10:32:56+07:00" level=info msg="Starting new IMAP monitor for user admin"

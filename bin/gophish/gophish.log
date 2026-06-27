@@ -1,0 +1,10 @@
+time="2026-06-27T10:33:30+07:00" level=warning msg="No contact address has been configured."
+time="2026-06-27T10:33:30+07:00" level=warning msg="Please consider adding a contact_address entry in your config.json"
+time="2026-06-27T10:33:31+07:00" level=info msg="Please login with the username admin and the password f85366cd02b8ce0e"
+time="2026-06-27T10:33:31+07:00" level=info msg="Starting phishing server at http://0.0.0.0:8080"
+time="2026-06-27T10:33:31+07:00" level=info msg="Starting IMAP monitor manager"
+time="2026-06-27T10:33:31+07:00" level=info msg="Starting admin server at https://0.0.0.0:3333"
+time="2026-06-27T10:33:31+07:00" level=info msg="Background Worker Started Successfully - Waiting for Campaigns"
+time="2026-06-27T10:33:31+07:00" level=info msg="Starting new IMAP monitor for user admin"
+2026/06/27 10:33:55 http: TLS handshake error from [::1]:51119: remote error: tls: unknown certificate
+2026/06/27 10:33:55 http: TLS handshake error from [::1]:64677: remote error: tls: unknown certificate
